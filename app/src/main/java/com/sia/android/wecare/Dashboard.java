@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -25,33 +25,46 @@ public class Dashboard extends AppCompatActivity {
     ImageView menuIcon;
     MaterialButton btnProfile, btnComplaints, btnLogout;
     TextView textEmail;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        // Your original status bar code
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Set the status bar background to white
             Window window = getWindow();
             window.setStatusBarColor(Color.WHITE);
-
-            // Make status bar icons dark
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
+            // Add this for status bar overlap fix
+            window.getDecorView().setOnApplyWindowInsetsListener((v, insets) -> {
+                int statusBarHeight = insets.getSystemWindowInsetTop();
+                findViewById(R.id.toolbar).setPadding(0, statusBarHeight, 0, 0);
+                return insets;
+            });
         }
 
-        // Initialize UI components
+        // Initialize ALL your original components
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
         menuIcon = findViewById(R.id.menuIcon);
         btnProfile = findViewById(R.id.btnProfile);
         btnComplaints = findViewById(R.id.btnComplaints);
         btnLogout = findViewById(R.id.btnLogout);
+        toolbar = findViewById(R.id.toolbar);
 
-        // Open drawer on menu icon click
+        // Set up toolbar (NEW)
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+
+        // Your original menu icon click listener
         menuIcon.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
-        // Sidebar item click handling
+        // Your original sidebar handling
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
 
@@ -73,7 +86,7 @@ public class Dashboard extends AppCompatActivity {
             return true;
         });
 
-        // Optional button listeners
+        // Your original button listeners
         btnProfile.setOnClickListener(v ->
                 Toast.makeText(this, "Profile feature coming soon", Toast.LENGTH_SHORT).show());
 
