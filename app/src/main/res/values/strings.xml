@@ -14,4 +14,5 @@
     <string name="middle_name">Enter your middle name</string>
     <string name="first_name">Enter your first name</string>
     <string name="registration_form">Registration Form</string>
+    <string name="user_profile">profile</string>
 </resources>
