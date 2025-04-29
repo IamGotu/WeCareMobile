@@ -1,10 +1,19 @@
 package com.sia.android.wecare;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
@@ -12,9 +21,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.navigation.NavigationView;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,10 +40,29 @@ public class ComplaintActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private int residentId;
 
+    Toolbar toolbar;
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    ImageView menuIcon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complaint);
+
+        // Your original status bar code
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Window window = getWindow();
+            window.setStatusBarColor(Color.WHITE);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
+            // Add this for status bar overlap fix
+            window.getDecorView().setOnApplyWindowInsetsListener((v, insets) -> {
+                int statusBarHeight = insets.getSystemWindowInsetTop();
+                findViewById(R.id.toolbar).setPadding(0, statusBarHeight, 0, 0);
+                return insets;
+            });
+        }
 
         // Get resident ID from Intent
         residentId = getIntent().getIntExtra("id", -1);
@@ -49,6 +78,24 @@ public class ComplaintActivity extends AppCompatActivity {
         btnSubmit = findViewById(R.id.btnSubmit);
         btnViewComplaints = findViewById(R.id.btnViewComplaints);
         rvComplaints = findViewById(R.id.rvComplaints);
+        // Initialize navigation components
+        drawerLayout = findViewById(R.id.drawerLayout);
+        navigationView = findViewById(R.id.navigationView);
+        toolbar = findViewById(R.id.toolbar);
+        menuIcon = findViewById(R.id.menuIcon); // Make sure this exists in your toolbar
+
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+
+        menuIcon.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            // Handle navigation item clicks
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
 
         // Set up RecyclerView
         complaintAdapter = new ComplaintAdapter(complaintList);
@@ -79,7 +126,7 @@ public class ComplaintActivity extends AppCompatActivity {
 
         try {
             JSONObject jsonBody = new JSONObject();
-            jsonBody.put("resident_id", residentId); // Get this from your session
+            jsonBody.put("resident_id", residentId);
             jsonBody.put("title", title);
             jsonBody.put("description", description);
 

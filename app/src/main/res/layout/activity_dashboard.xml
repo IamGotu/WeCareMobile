@@ -16,9 +16,6 @@
         android:fitsSystemWindows="true">
 
         <!-- Toolbar with status bar padding -->
-
-        <!-- Your original content EXACTLY as you had it -->
-
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
