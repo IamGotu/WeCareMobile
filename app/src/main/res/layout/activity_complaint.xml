@@ -47,7 +47,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Complaint Title"
-                android:inputType="textCapWords"/>
+                android:inputType="textCapWords"
+                android:backgroundTint="#1976D2"/>
 
             <EditText
                 android:id="@+id/etDescription"
@@ -56,21 +57,30 @@
                 android:layout_marginTop="8dp"
                 android:hint="Description"
                 android:inputType="textMultiLine"
-                android:minHeight="100dp"/>
+                android:minHeight="100dp"
+                android:backgroundTint="#1976D2"/>
 
             <Button
                 android:id="@+id/btnSubmit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Submit Complaint"/>
+                android:text="Submit Complaint"
+                style="?attr/materialButtonOutlinedStyle"
+                android:backgroundTint="#1976D2"
+                android:textColor="@color/white"
+                android:padding="12dp"/>
 
             <Button
                 android:id="@+id/btnViewComplaints"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="View My Complaints"/>
+                android:text="View My Complaints"
+                style="?attr/materialButtonOutlinedStyle"
+                android:backgroundTint="#1976D2"
+                android:textColor="@color/white"
+                android:padding="12dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvComplaints"
