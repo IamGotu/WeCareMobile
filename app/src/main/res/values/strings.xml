@@ -15,4 +15,9 @@
     <string name="first_name">Enter your first name</string>
     <string name="registration_form">Registration Form</string>
     <string name="user_profile">profile</string>
+    <string name="profile">Profile</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="complaints">Complaints</string>
+    <string name="complaint_history">Complaint History</string>
+    <string name="logout">Logout\n</string>
 </resources>
