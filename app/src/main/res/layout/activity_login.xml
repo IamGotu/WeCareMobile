@@ -13,104 +13,104 @@
         android:layout_height="wrap_content"
         android:padding="24dp">
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="MissingConstraints">
+
+            <ImageView
+                android:id="@+id/logoImageView"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/ic_wecare_logo"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/complanant_portal"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:textColor="#1976D2"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/subtitleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/system_title"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="#757575"
+                android:layout_marginBottom="24dp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/errorTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="24dp"
+                android:textColor="@android:color/holo_red_dark"
+                android:visibility="gone"
                 android:gravity="center"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:ignore="MissingConstraints">
+                android:text="Error will appear here"
+                android:layout_marginBottom="16dp"/>
 
-                <ImageView
-                    android:id="@+id/logoImageView"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginBottom="16dp"
-                    android:src="@drawable/ic_wecare_logo"
-                    android:scaleType="centerCrop" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:endIconMode="clear_text">
 
-                <TextView
-                    android:id="@+id/titleTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/complanant_portal"
-                    android:textAppearance="?attr/textAppearanceHeadline6"
-                    android:textColor="#1976D2"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="4dp" />
-
-                <TextView
-                    android:id="@+id/subtitleTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/system_title"
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="#757575"
-                    android:layout_marginBottom="24dp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/errorTextView"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/holo_red_dark"
-                    android:visibility="gone"
-                    android:gravity="center"
-                    android:text="Error will appear here"
-                    android:layout_marginBottom="16dp"/>
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
+                    android:background="@drawable/edittext_background" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:endIconMode="password_toggle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/passwordEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:endIconMode="clear_text">
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    android:background="@drawable/edittext_background" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/emailEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/email"
-                        android:inputType="textEmailAddress"
-                        android:background="@drawable/edittext_background" />
-                </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/login"
+                style="?attr/materialButtonOutlinedStyle"
+                android:backgroundTint="#1976D2"
+                android:textColor="@color/white"
+                android:padding="12dp" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    app:endIconMode="password_toggle">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/passwordEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/password"
-                        android:inputType="textPassword"
-                        android:background="@drawable/edittext_background" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/loginButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/login"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:backgroundTint="#1976D2"
-                    android:textColor="@color/white"
-                    android:padding="12dp" />
-
-                <TextView
-                    android:id="@+id/registerTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/redirect_registration"
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="#757575"
-                    android:layout_marginTop="24dp" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/registerTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/redirect_registration"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="#757575"
+                android:layout_marginTop="24dp" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
