@@ -73,7 +73,13 @@ public class Dashboard extends AppCompatActivity {
             } else if (id == R.id.nav_dashboard) {
                 Toast.makeText(this, "You are on Dashboard", Toast.LENGTH_SHORT).show();
             } else if (id == R.id.nav_complaints) {
+                int userId = getIntent().getIntExtra("id", -1);
+                if (userId == -1) {
+                    Toast.makeText(this, "User not identified", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
                 Intent intent = new Intent(Dashboard.this, ComplaintActivity.class);
+                intent.putExtra("id", userId); // Pass the ID forward
                 startActivity(intent);
             } else if (id == R.id.nav_history) {
                 Toast.makeText(this, "Complaint History coming soon", Toast.LENGTH_SHORT).show();
