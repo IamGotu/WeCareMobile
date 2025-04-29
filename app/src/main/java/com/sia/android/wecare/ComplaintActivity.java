@@ -92,7 +92,29 @@ public class ComplaintActivity extends AppCompatActivity {
         menuIcon.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
         navigationView.setNavigationItemSelectedListener(item -> {
-            // Handle navigation item clicks
+            int id = item.getItemId();
+
+            if (id == R.id.nav_profile) {
+                Toast.makeText(this, "Profile feature coming soon", Toast.LENGTH_SHORT).show();
+            } else if (id == R.id.nav_dashboard) {
+                int userId = getIntent().getIntExtra("id", -1);
+                if (userId == -1) {
+                    Toast.makeText(this, "User not identified", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                Intent intent = new Intent(ComplaintActivity.this, Dashboard.class);
+                intent.putExtra("id", userId); // Pass the ID forward
+                startActivity(intent);
+            } else if (id == R.id.nav_complaints) {
+                Toast.makeText(this, "You are on Complaint Page", Toast.LENGTH_SHORT).show();
+            } else if (id == R.id.nav_history) {
+                Toast.makeText(this, "Complaint History coming soon", Toast.LENGTH_SHORT).show();
+            } else if (id == R.id.nav_logout) {
+                Intent intent = new Intent(ComplaintActivity.this, Login.class);
+                startActivity(intent);
+                finish();
+            }
+
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
