@@ -20,4 +20,5 @@
     <string name="complaints">Complaints</string>
     <string name="complaint_history">Complaint History</string>
     <string name="logout">Logout\n</string>
+    <string name="menu">Menu</string>
 </resources>
