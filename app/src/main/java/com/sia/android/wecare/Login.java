@@ -1,20 +1,34 @@
 package com.sia.android.wecare;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Login extends AppCompatActivity {
 
@@ -31,42 +45,94 @@ public class Login extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        TextView registerTextView = findViewById(R.id.registerTextView);
-        registerTextView.setOnClickListener(new View.OnClickListener() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Login.this, Register.class);
-                startActivity(intent);
+            public void handleOnBackPressed() {
+                // handle back press manually if needed
+                finish(); // or any custom behavior
             }
         });
-        
+
+        TextView registerTextView = findViewById(R.id.registerTextView);
+        registerTextView.setOnClickListener(v -> {
+            Intent intent = new Intent(Login.this, Register.class);
+            startActivity(intent);
+        });
+
         txtEmail = findViewById(R.id.emailEditText);
         txtPassword = findViewById(R.id.passwordEditText);
-        tv_error = findViewById(R.id.registrationCard);
+        tv_error = findViewById(R.id.errorTextView);
         btnLogin = findViewById(R.id.loginButton);
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GoLogin();
-
-            }
-        });
-
+        btnLogin.setOnClickListener(v -> GoLogin());
     }
 
     private void GoLogin() {
         String email = txtEmail.getText().toString().trim();
         String password = txtPassword.getText().toString().trim();
 
-        if(email.isEmpty()){
-            tv_error.setText("Enter Email");
-        } else if(password.isEmpty()){
-            tv_error.setText("Enter Password");
+        if (email.isEmpty()) {
+            showError("Enter Email");
+        } else if (password.isEmpty()) {
+            showError("Enter Password");
         } else {
-            Intent intent = new Intent(Login.this, Dashboard.class);
-            startActivity(intent);
-        }
+            ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Loading...");
+            progressDialog.show();
 
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url_login,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            progressDialog.dismiss();
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                String success = jsonObject.getString("success");
+
+                                if (success.equals("1")) {
+                                    JSONArray jsonArray = jsonObject.getJSONArray("login");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject object = jsonArray.getJSONObject(i);
+                                        String outbid = object.getString("id");
+                                        String voicemail = object.getString("email");
+
+                                        // **Just show a Toast, no need to startActivity**
+                                        Toast.makeText(Login.this, "ID: " + outbid + "\nEmail: " + voicemail, Toast.LENGTH_LONG).show();
+                                    }
+                                } else {
+                                    Toast.makeText(Login.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Toast.makeText(Login.this, "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            progressDialog.dismiss();
+                            Toast.makeText(Login.this, "Error: " + error.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("email", email);
+                    params.put("password", password);
+                    return params;
+                }
+            };
+
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            requestQueue.add(stringRequest);
+        }
+    }
+
+    private void showError(String message) {
+        tv_error.setVisibility(View.VISIBLE);
+        tv_error.setText(message);
+
+        tv_error.postDelayed(() -> tv_error.setVisibility(View.GONE), 5000);
     }
 }
