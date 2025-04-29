@@ -73,7 +73,8 @@ public class Dashboard extends AppCompatActivity {
             } else if (id == R.id.nav_dashboard) {
                 Toast.makeText(this, "You are on Dashboard", Toast.LENGTH_SHORT).show();
             } else if (id == R.id.nav_complaints) {
-                Toast.makeText(this, "Complaint form coming soon", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Dashboard.this, ComplaintActivity.class);
+                startActivity(intent);
             } else if (id == R.id.nav_history) {
                 Toast.makeText(this, "Complaint History coming soon", Toast.LENGTH_SHORT).show();
             } else if (id == R.id.nav_logout) {
@@ -90,8 +91,10 @@ public class Dashboard extends AppCompatActivity {
         btnProfile.setOnClickListener(v ->
                 Toast.makeText(this, "Profile feature coming soon", Toast.LENGTH_SHORT).show());
 
-        btnComplaints.setOnClickListener(v ->
-                Toast.makeText(this, "Complaint form coming soon", Toast.LENGTH_SHORT).show());
+        btnComplaints.setOnClickListener(v -> {
+            Intent intent = new Intent(Dashboard.this, ComplaintActivity.class);
+            startActivity(intent);
+        });
 
         btnLogout.setOnClickListener(v -> {
             Intent intent = new Intent(Dashboard.this, Login.class);

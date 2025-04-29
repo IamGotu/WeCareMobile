@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="TODO">192.168.0.35</domain> <!-- Your IP Address -->
+        <!-- For emulator -->
+        <domain includeSubdomains="true">10.0.2.2</domain>
+        <!-- For physical device testing - replace with your computer's local IP -->
+        <domain includeSubdomains="true">192.168.0.35</domain>
     </domain-config>
 </network-security-config>
