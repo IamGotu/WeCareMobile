@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">WeCare</string>
+    <string name="complanant_portal">Complanant Portal</string>
+    <string name="system_title">Barangay Complaint Management System</string>
+    <string name="email">Enter your email</string>
+    <string name="password">Enter your password</string>
+    <string name="login">Login</string>
+    <string name="redirect_registration">Don\'t have an account? Register.</string>
+    <string name="redirect_login">Already have an account? Login.</string>
+    <string name="register">Register</string>
+    <string name="address">Enter your address</string>
+    <string name="phonee_number">Enter your phone number</string>
+    <string name="last_name">Enter your last name</string>
+    <string name="middle_name">Enter your middle name</string>
+    <string name="first_name">Enter your first name</string>
+    <string name="registration_form">Registration Form</string>
+</resources>
