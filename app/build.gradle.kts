@@ -42,4 +42,6 @@ dependencies {
 
     implementation(libs.volley)
     implementation(libs.mysql.connector.java)
+    implementation (libs.cardview)
+    implementation (libs.recyclerview)
 }

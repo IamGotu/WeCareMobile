@@ -14,31 +14,45 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.navigation.NavigationView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Dashboard extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ImageView menuIcon;
-    MaterialButton btnProfile, btnComplaints, btnLogout;
     TextView textEmail;
     Toolbar toolbar;
+
+    // New dashboard elements
+    private TextView tvTotalComplaints, tvPendingComplaints, tvResolvedThisMonth, tvInProgressComplaints;
+    private RecyclerView rvActiveComplaints, rvResolvedComplaints;
+    private RequestQueue requestQueue;
+    private int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        // Your original status bar code
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Window window = getWindow();
             window.setStatusBarColor(Color.WHITE);
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-
-            // Add this for status bar overlap fix
             window.getDecorView().setOnApplyWindowInsetsListener((v, insets) -> {
                 int statusBarHeight = insets.getSystemWindowInsetTop();
                 findViewById(R.id.toolbar).setPadding(0, statusBarHeight, 0, 0);
@@ -46,25 +60,42 @@ public class Dashboard extends AppCompatActivity {
             });
         }
 
-        // Initialize ALL your original components
+        // Initialize views (original + new)
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
         menuIcon = findViewById(R.id.menuIcon);
-        btnProfile = findViewById(R.id.btnProfile);
-        btnComplaints = findViewById(R.id.btnComplaints);
-        btnLogout = findViewById(R.id.btnLogout);
         toolbar = findViewById(R.id.toolbar);
 
-        // Set up toolbar (NEW)
+        // New dashboard views
+        tvTotalComplaints = findViewById(R.id.tvTotalComplaints);
+        tvPendingComplaints = findViewById(R.id.tvPendingComplaints);
+        tvResolvedThisMonth = findViewById(R.id.tvResolvedThisMonth);
+        tvInProgressComplaints = findViewById(R.id.tvInProgressComplaints);
+        rvActiveComplaints = findViewById(R.id.rvActiveComplaints);
+        rvResolvedComplaints = findViewById(R.id.rvResolvedComplaints);
+
+        requestQueue = Volley.newRequestQueue(this);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-        // Your original menu icon click listener
+        // Get user ID from intent
+        userId = getIntent().getIntExtra("id", -1);
+        if (userId == -1) {
+            Toast.makeText(this, "User not identified", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        // Setup RecyclerViews
+        rvActiveComplaints.setLayoutManager(new LinearLayoutManager(this));
+        rvResolvedComplaints.setLayoutManager(new LinearLayoutManager(this));
+
+        // Original menu icon click listener
         menuIcon.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
-        // Your original sidebar handling
+        // Original sidebar handling (unchanged)
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
 
@@ -73,13 +104,12 @@ public class Dashboard extends AppCompatActivity {
             } else if (id == R.id.nav_dashboard) {
                 Toast.makeText(this, "You are on Dashboard", Toast.LENGTH_SHORT).show();
             } else if (id == R.id.nav_complaints) {
-                int userId = getIntent().getIntExtra("id", -1);
                 if (userId == -1) {
                     Toast.makeText(this, "User not identified", Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 Intent intent = new Intent(Dashboard.this, ComplaintActivity.class);
-                intent.putExtra("id", userId); // Pass the ID forward
+                intent.putExtra("id", userId);
                 startActivity(intent);
             } else if (id == R.id.nav_history) {
                 Toast.makeText(this, "Complaint History coming soon", Toast.LENGTH_SHORT).show();
@@ -93,26 +123,57 @@ public class Dashboard extends AppCompatActivity {
             return true;
         });
 
-        // Your original button listeners
-        btnProfile.setOnClickListener(v ->
-                Toast.makeText(this, "Profile feature coming soon", Toast.LENGTH_SHORT).show());
+        // Load dashboard data
+        loadDashboardData();
+    }
 
-        btnComplaints.setOnClickListener(v -> {
-            int userId = getIntent().getIntExtra("id", -1);
-            if (userId == -1) {
-                Toast.makeText(this, "User not identified", Toast.LENGTH_SHORT).show();
-                return;
-            }
+    private void loadDashboardData() {
+        String url = "http://192.168.0.35/wecare_connection/dashboard.php?user_id=" + userId;
 
-            Intent intent = new Intent(Dashboard.this, ComplaintActivity.class);
-            intent.putExtra("id", userId); // Pass the ID forward
-            startActivity(intent);
-        });
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET,
+                url,
+                null,
+                response -> {
+                    try {
+                        // Update statistics
+                        JSONObject stats = response.getJSONObject("statistics");
+                        tvTotalComplaints.setText(stats.getString("total_complaints"));
+                        tvPendingComplaints.setText(stats.getString("pending_complaints"));
+                        tvResolvedThisMonth.setText(stats.getString("resolved_this_month"));
+                        tvInProgressComplaints.setText(stats.getString("in_progress_complaints"));
 
-        btnLogout.setOnClickListener(v -> {
-            Intent intent = new Intent(Dashboard.this, Login.class);
-            startActivity(intent);
-            finish();
-        });
+                        // Update active complaints
+                        List<Complaint> activeComplaints = parseComplaints(response.getJSONArray("active_complaints"));
+                        rvActiveComplaints.setAdapter(new ComplaintAdapter(activeComplaints));
+
+                        // Update resolved complaints
+                        List<Complaint> resolvedComplaints = parseComplaints(response.getJSONArray("resolved_complaints"));
+                        rvResolvedComplaints.setAdapter(new ComplaintAdapter(resolvedComplaints));
+
+                    } catch (JSONException e) {
+                        Toast.makeText(this, "Error parsing data", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> Toast.makeText(this, "Error loading dashboard", Toast.LENGTH_SHORT).show()
+        );
+
+        requestQueue.add(request);
+    }
+
+    private List<Complaint> parseComplaints(JSONArray jsonArray) throws JSONException {
+        List<Complaint> complaints = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject obj = jsonArray.getJSONObject(i);
+            complaints.add(new Complaint(
+                    obj.getInt("id"),
+                    obj.getString("title"),
+                    obj.getString("description"),
+                    obj.getString("status"),
+                    obj.getString("created_at")
+                    // Add resolved_at if needed
+            ));
+        }
+        return complaints;
     }
 }
