@@ -96,8 +96,11 @@ public class Login extends AppCompatActivity {
                                         String outbid = object.getString("id");
                                         String voicemail = object.getString("email");
 
-                                        // **Just show a Toast, no need to startActivity**
-                                        Toast.makeText(Login.this, "ID: " + outbid + "\nEmail: " + voicemail, Toast.LENGTH_LONG).show();
+                                        // Successful login, launch DashboardActivity
+                                        Intent intent = new Intent(Login.this, Dashboard.class);
+                                        intent.putExtra("email", voicemail); // Pass email to dashboard
+                                        startActivity(intent);
+                                        finish(); // Close the login activity and prevent back press
                                     }
                                 } else {
                                     Toast.makeText(Login.this, "Login Failed", Toast.LENGTH_SHORT).show();
@@ -129,10 +132,12 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    // Add the showError method here, outside of any other methods
     private void showError(String message) {
         tv_error.setVisibility(View.VISIBLE);
         tv_error.setText(message);
 
+        // Hide the error message after 5 seconds
         tv_error.postDelayed(() -> tv_error.setVisibility(View.GONE), 5000);
     }
 }
