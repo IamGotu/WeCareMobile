@@ -93,14 +93,14 @@ public class Login extends AppCompatActivity {
                                     JSONArray jsonArray = jsonObject.getJSONArray("login");
                                     for (int i = 0; i < jsonArray.length(); i++) {
                                         JSONObject object = jsonArray.getJSONObject(i);
-                                        String outbid = object.getString("id");
-                                        String voicemail = object.getString("email");
+                                        int userId = object.getInt("id"); // Make sure this is int
+                                        String email = object.getString("email");
 
-                                        // Successful login, launch DashboardActivity
                                         Intent intent = new Intent(Login.this, Dashboard.class);
-                                        intent.putExtra("email", voicemail); // Pass email to dashboard
+                                        intent.putExtra("id", userId); // Pass the actual user ID
+                                        intent.putExtra("email", email);
                                         startActivity(intent);
-                                        finish(); // Close the login activity and prevent back press
+                                        finish();
                                     }
                                 } else {
                                     Toast.makeText(Login.this, "Login Failed", Toast.LENGTH_SHORT).show();

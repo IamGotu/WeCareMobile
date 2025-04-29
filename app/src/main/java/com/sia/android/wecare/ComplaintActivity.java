@@ -28,12 +28,20 @@ public class ComplaintActivity extends AppCompatActivity {
     private ComplaintAdapter complaintAdapter;
     private List<Complaint> complaintList = new ArrayList<>();
     private RequestQueue requestQueue;
-    private int residentId; // Get this from your session
+    private int residentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complaint);
+
+        // Get resident ID from Intent
+        residentId = getIntent().getIntExtra("id", -1);
+        if (residentId == -1) {
+            Toast.makeText(this, "User not identified", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         // Initialize views
         etTitle = findViewById(R.id.etTitle);
@@ -49,9 +57,6 @@ public class ComplaintActivity extends AppCompatActivity {
 
         // Initialize Volley request queue
         requestQueue = Volley.newRequestQueue(this);
-
-        // Get resident ID from session
-        residentId = getResidentIdFromSession();
 
         // Button listeners
         btnSubmit.setOnClickListener(v -> submitComplaint());
@@ -154,11 +159,5 @@ public class ComplaintActivity extends AppCompatActivity {
         );
 
         requestQueue.add(request);
-    }
-
-    private int getResidentIdFromSession() {
-        // Implement your session management here
-        // This should return the logged-in resident's ID
-        return 1; // Replace with actual session logic
     }
 }

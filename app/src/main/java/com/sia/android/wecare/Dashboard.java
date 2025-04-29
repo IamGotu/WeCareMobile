@@ -92,7 +92,14 @@ public class Dashboard extends AppCompatActivity {
                 Toast.makeText(this, "Profile feature coming soon", Toast.LENGTH_SHORT).show());
 
         btnComplaints.setOnClickListener(v -> {
+            int userId = getIntent().getIntExtra("id", -1);
+            if (userId == -1) {
+                Toast.makeText(this, "User not identified", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             Intent intent = new Intent(Dashboard.this, ComplaintActivity.class);
+            intent.putExtra("id", userId); // Pass the ID forward
             startActivity(intent);
         });
 
