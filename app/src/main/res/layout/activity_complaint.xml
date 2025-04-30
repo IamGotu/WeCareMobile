@@ -23,16 +23,35 @@
             android:elevation="4dp"
             android:paddingTop="@dimen/status_bar_padding">
 
-            <ImageView
-                android:id="@+id/menuIcon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="16dp"
-                android:contentDescription="@string/menu"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_menu"
-                android:fitsSystemWindows="true"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
+                <ImageView
+                    android:id="@+id/menuIcon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@string/menu"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_menu"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="16dp"/>
+
+                <TextView
+                    android:id="@+id/toolbarTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/complaints"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
 
         <LinearLayout
@@ -43,59 +62,49 @@
             android:padding="16dp"
             android:paddingTop="0dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/complaints"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp"/>
-
             <EditText
                 android:id="@+id/etTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Complaint Title"
-                android:inputType="textCapWords"
-                android:backgroundTint="#1976D2"/>
+                android:backgroundTint="#1976D2"
+                android:hint="@string/complaint_title"
+                android:inputType="textCapWords" />
 
             <EditText
                 android:id="@+id/etDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Description"
+                android:backgroundTint="#1976D2"
+                android:hint="@string/description"
                 android:inputType="textMultiLine"
-                android:minHeight="100dp"
-                android:backgroundTint="#1976D2"/>
+                android:minHeight="100dp" />
 
             <Button
                 android:id="@+id/btnSubmit"
+                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Submit Complaint"
-                style="?attr/materialButtonOutlinedStyle"
                 android:backgroundTint="#1976D2"
-                android:textColor="@color/white"
-                android:padding="12dp"/>
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/submit_complaint"
+                android:textColor="@color/white" />
 
-            <Button
-                android:id="@+id/btnViewComplaints"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="View My Complaints"
-                style="?attr/materialButtonOutlinedStyle"
-                android:backgroundTint="#1976D2"
-                android:textColor="@color/white"
-                android:padding="12dp"/>
+                android:baselineAligned="false"
+                android:text="@string/recent_active_complaints"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvComplaints"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="16dp"/>
+                android:layout_marginTop="16dp" />
 
         </LinearLayout>
 

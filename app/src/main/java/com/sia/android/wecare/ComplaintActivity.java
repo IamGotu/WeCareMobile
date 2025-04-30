@@ -33,7 +33,7 @@ import java.util.Map;
 
 public class ComplaintActivity extends AppCompatActivity {
     private EditText etTitle, etDescription;
-    private Button btnSubmit, btnViewComplaints;
+    private Button btnSubmit;
     private RecyclerView rvComplaints;
     private ComplaintAdapter complaintAdapter;
     private List<Complaint> complaintList = new ArrayList<>();
@@ -66,7 +66,6 @@ public class ComplaintActivity extends AppCompatActivity {
         etTitle = findViewById(R.id.etTitle);
         etDescription = findViewById(R.id.etDescription);
         btnSubmit = findViewById(R.id.btnSubmit);
-        btnViewComplaints = findViewById(R.id.btnViewComplaints);
         rvComplaints = findViewById(R.id.rvComplaints);
         // Initialize navigation components
         drawerLayout = findViewById(R.id.drawerLayout);
@@ -126,7 +125,6 @@ public class ComplaintActivity extends AppCompatActivity {
 
         // Button listeners
         btnSubmit.setOnClickListener(v -> submitComplaint());
-        btnViewComplaints.setOnClickListener(v -> loadComplaints());
 
         // Load complaints initially
         loadComplaints();

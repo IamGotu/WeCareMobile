@@ -21,4 +21,14 @@
     <string name="complaint_history">Complaint History</string>
     <string name="logout">Logout\n</string>
     <string name="menu">Menu</string>
+    <string name="complaint_overview">Complaint Overview</string>
+    <string name="total_complaints">Total Complaints</string>
+    <string name="pending">Pending</string>
+    <string name="resolved_month">Resolved (Month)</string>
+    <string name="in_progress">In Progress</string>
+    <string name="recent_active_complaints">Recent Active Complaints</string>
+    <string name="recently_resolved">Recently Resolved</string>
+    <string name="submit_complaint">Submit Complaint</string>
+    <string name="description">Description</string>
+    <string name="complaint_title">Complaint Title</string>
 </resources>
