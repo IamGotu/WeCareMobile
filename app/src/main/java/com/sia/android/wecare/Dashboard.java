@@ -48,16 +48,9 @@ public class Dashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Window window = getWindow();
-            window.setStatusBarColor(Color.WHITE);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            window.getDecorView().setOnApplyWindowInsetsListener((v, insets) -> {
-                int statusBarHeight = insets.getSystemWindowInsetTop();
-                findViewById(R.id.toolbar).setPadding(0, statusBarHeight, 0, 0);
-                return insets;
-            });
-        }
+        // For white status bar with dark icons
+        getWindow().setStatusBarColor(Color.WHITE);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         // Initialize views (original + new)
         drawerLayout = findViewById(R.id.drawerLayout);

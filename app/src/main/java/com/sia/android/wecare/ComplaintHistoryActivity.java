@@ -1,9 +1,17 @@
 package com.sia.android.wecare;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,6 +19,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,11 +33,25 @@ public class ComplaintHistoryActivity extends AppCompatActivity {
     private RecyclerView rvComplaintHistory;
     private RequestQueue requestQueue;
     private int userId;
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    ImageView menuIcon;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complaint_history);
+
+        // For white status bar with dark icons
+        getWindow().setStatusBarColor(Color.WHITE);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
+        // Initialize views
+        drawerLayout = findViewById(R.id.drawerLayout);
+        navigationView = findViewById(R.id.navigationView);
+        menuIcon = findViewById(R.id.menuIcon);
+        toolbar = findViewById(R.id.toolbar);
 
         rvComplaintHistory = findViewById(R.id.rvComplaintHistory);
         rvComplaintHistory.setLayoutManager(new LinearLayoutManager(this));
@@ -42,6 +65,38 @@ public class ComplaintHistoryActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        // Menu icon click listener
+        menuIcon.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+
+        // Navigation item selection
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.nav_profile) {
+                Toast.makeText(this, "Profile feature coming soon", Toast.LENGTH_SHORT).show();
+            } else if (id == R.id.nav_dashboard) {
+                Intent intent = new Intent(ComplaintHistoryActivity.this, Dashboard.class);
+                intent.putExtra("id", userId);
+                startActivity(intent);
+                finish();
+            } else if (id == R.id.nav_complaints) {
+                Intent intent = new Intent(ComplaintHistoryActivity.this, ComplaintActivity.class);
+                intent.putExtra("id", userId);
+                startActivity(intent);
+                finish();
+            } else if (id == R.id.nav_history) {
+                // Already on history page
+                Toast.makeText(this, "You are on History", Toast.LENGTH_SHORT).show();
+            } else if (id == R.id.nav_logout) {
+                Intent intent = new Intent(ComplaintHistoryActivity.this, Login.class);
+                startActivity(intent);
+                finish();
+            }
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
 
         loadComplaintHistory();
     }
@@ -59,9 +114,13 @@ public class ComplaintHistoryActivity extends AppCompatActivity {
                         rvComplaintHistory.setAdapter(new ComplaintAdapter(complaints));
                     } catch (JSONException e) {
                         Toast.makeText(this, "Error parsing data", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
                     }
                 },
-                error -> Toast.makeText(this, "Error loading complaint history", Toast.LENGTH_SHORT).show()
+                error -> {
+                    Toast.makeText(this, "Error loading complaint history", Toast.LENGTH_SHORT).show();
+                    error.printStackTrace();
+                }
         );
 
         requestQueue.add(request);

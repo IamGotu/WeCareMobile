@@ -50,19 +50,9 @@ public class ComplaintActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complaint);
 
-        // Your original status bar code
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Window window = getWindow();
-            window.setStatusBarColor(Color.WHITE);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-
-            // Add this for status bar overlap fix
-            window.getDecorView().setOnApplyWindowInsetsListener((v, insets) -> {
-                int statusBarHeight = insets.getSystemWindowInsetTop();
-                findViewById(R.id.toolbar).setPadding(0, statusBarHeight, 0, 0);
-                return insets;
-            });
-        }
+        // For white status bar with dark icons
+        getWindow().setStatusBarColor(Color.WHITE);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         // Get resident ID from Intent
         residentId = getIntent().getIntExtra("id", -1);
@@ -108,7 +98,14 @@ public class ComplaintActivity extends AppCompatActivity {
             } else if (id == R.id.nav_complaints) {
                 Toast.makeText(this, "You are on Complaint Page", Toast.LENGTH_SHORT).show();
             } else if (id == R.id.nav_history) {
-                Toast.makeText(this, "Complaint History coming soon", Toast.LENGTH_SHORT).show();
+                int userId = getIntent().getIntExtra("id", -1);
+                if (userId == -1) {
+                    Toast.makeText(this, "User not identified", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                Intent intent = new Intent(ComplaintActivity.this, ComplaintHistoryActivity.class);
+                intent.putExtra("id", userId); // Pass the ID forward
+                startActivity(intent);
             } else if (id == R.id.nav_logout) {
                 Intent intent = new Intent(ComplaintActivity.this, Login.class);
                 startActivity(intent);
