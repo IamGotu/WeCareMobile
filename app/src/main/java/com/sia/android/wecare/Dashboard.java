@@ -35,7 +35,6 @@ public class Dashboard extends AppCompatActivity {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ImageView menuIcon;
-    TextView textEmail;
     Toolbar toolbar;
 
     // New dashboard elements
@@ -112,7 +111,13 @@ public class Dashboard extends AppCompatActivity {
                 intent.putExtra("id", userId);
                 startActivity(intent);
             } else if (id == R.id.nav_history) {
-                Toast.makeText(this, "Complaint History coming soon", Toast.LENGTH_SHORT).show();
+                if (userId == -1) {
+                    Toast.makeText(this, "User not identified", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                Intent intent = new Intent(Dashboard.this, ComplaintHistoryActivity.class);
+                intent.putExtra("id", userId);
+                startActivity(intent);
             } else if (id == R.id.nav_logout) {
                 Intent intent = new Intent(Dashboard.this, Login.class);
                 startActivity(intent);
@@ -171,7 +176,6 @@ public class Dashboard extends AppCompatActivity {
                     obj.getString("description"),
                     obj.getString("status"),
                     obj.getString("created_at")
-                    // Add resolved_at if needed
             ));
         }
         return complaints;
